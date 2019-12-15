@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import Nav from './Navbar/nav'
 import Homepage from "./Homepage/Homepage";
+import CreateUser from "./Create-User/Create-User";
 import Login from './Login/Login';
 import {
     BrowserRouter as Router,
@@ -19,7 +20,7 @@ function App() {
                   <Route exact path="/" component={Homepage}/>
                   <Route path="/about" component={About}/>
                   <Route path="/login" component={Login}/>
-                  <Route path="/account" component={Login}/>
+                  <Route path="/sign-up" component={CreateUser}/>
               </Switch>
           </div>
       </Router>

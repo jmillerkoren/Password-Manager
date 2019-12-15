@@ -8,21 +8,21 @@ function Nav() {
             <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav mr-auto">
                     <Link to="/" className="nav-link">
-                        <li className="nav-item">Password Manager</li>
+                        <li className="nav-item text-white">Password Manager</li>
                     </Link>
-                    <Link to="/about" className="nav-link">
-                        <li className="nav-item">About</li>
+                    <Link to="/about" className="nav-link ml-3">
+                        <li className="nav-item" id="nav-item">About</li>
                     </Link>
                     <Link to="/getting-started" className="nav-link">
-                        <li className="nav-item">Getting Started</li>
+                        <li className="nav-item" id="nav-item">Getting Started</li>
                     </Link>
                 </ul>
                 <ul className="navbar-nav">
-                    <Link to="/account" className="nav-link">
-                        <li className="nav-item">Create Account</li>
+                    <Link to="/sign-up" className="nav-link mr-2">
+                        <li className="nav-item" id="nav-item">Sign Up</li>
                     </Link>
                     <Link to="/login" className="nav-link">
-                        <li className="nav-item">Login</li>
+                        <li className="nav-item" id="nav-item">Login</li>
                     </Link>
                 </ul>
             </div>
