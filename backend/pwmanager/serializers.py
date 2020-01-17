@@ -1,7 +1,8 @@
-from django.contrib.auth.models import User
+from .models import VaultUser
 from rest_framework import serializers
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+
+class VaultUserSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
-        model = User
-        fields = ['email', 'password']
+        model = VaultUser
+        fields = ['auth_key']
