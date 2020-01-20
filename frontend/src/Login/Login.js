@@ -16,8 +16,7 @@ function Login() {
         evt.preventDefault();
         let encryptionKey = calculateHash();
         const result = await axios.post('http://127.0.0.1:8000/api/v1/token/', {
-            username: formData.email,
-            password: formData.password
+            auth_key: encryptionKey
         });
         console.log(encryptionKey);
         console.log(result)

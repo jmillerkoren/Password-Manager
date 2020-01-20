@@ -4,7 +4,7 @@ from .models import VaultUser
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from pwmanager.serializers import VaultUserSerializer
+from .serializers import VaultUserSerializer
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -22,11 +22,13 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(methods=['post'], detail=False)
     def create_user(self, request):
         user = VaultUser.objects.create_user(request.data['auth_key'])
+        user.set_unusable_password()
         user_serializer = self.get_serializer_class()(user, context={'request': request})
         return Response(user_serializer.data)
 
 
     @action(methods=['post'], detail=False)
     def login(self, request):
+        print(request.data)
         return Response()
 
