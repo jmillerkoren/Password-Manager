@@ -16,14 +16,15 @@ function Login() {
         evt.preventDefault();
         let encryptionKey = calculateHash();
         const result = await axios.post('http://127.0.0.1:8000/api/v1/token/', {
-            auth_key: encryptionKey
+            auth_key: encryptionKey,
+            password: encryptionKey
         });
         console.log(encryptionKey);
         console.log(result)
     };
 
     const calculateHash = () => {
-        let hash = formData.password;
+        let hash = formData.email + formData.password;
         for (let i = 0; i < 5000; ++i) {
             hash = sha256(hash).toString();
         }

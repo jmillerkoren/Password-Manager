@@ -10,4 +10,4 @@ class VaultBackend(BaseBackend):
         except VaultUser.DoesNotExist:
             raise exceptions.AuthenticationFailed("No such user")
 
-        return vault_user, None
+        return vault_user

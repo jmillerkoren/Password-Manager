@@ -21,11 +21,9 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=False)
     def create_user(self, request):
-        user = VaultUser.objects.create_user(request.data['auth_key'])
-        user.set_unusable_password()
+        user = VaultUser.objects.create_user(request.data['auth_key'], request.data['password'])
         user_serializer = self.get_serializer_class()(user, context={'request': request})
         return Response(user_serializer.data)
-
 
     @action(methods=['post'], detail=False)
     def login(self, request):

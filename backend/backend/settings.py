@@ -79,7 +79,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 AUTH_USER_MODEL = 'pwmanager.VaultUser'
 
-AUTHENTICATION_BACKENDS = ['pwmanager.VaultBackend']
+AUTHENTICATION_BACKENDS = ['pwmanager.VaultBackend.VaultBackend']
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
