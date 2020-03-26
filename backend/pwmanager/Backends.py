@@ -9,5 +9,16 @@ class VaultBackend(BaseBackend):
             vault_user = VaultUser.objects.get(auth_key=auth_key)
         except VaultUser.DoesNotExist:
             raise exceptions.AuthenticationFailed("No such user")
+        return vault_user, None
 
-        return vault_user
+    def get_user(self, vault_key):
+        try:
+            print(vault_key)
+            return VaultUser.objects.get(pk=vault_key)
+        except VaultBackend.DoesNotExist:
+            return None
+
+
+class TokenBackend(BaseBackend):
+    def authenticate(self, request):
+        return None

@@ -79,7 +79,7 @@ CORS_ORIGIN_ALLOW_ALL = True
 
 AUTH_USER_MODEL = 'pwmanager.VaultUser'
 
-AUTHENTICATION_BACKENDS = ['pwmanager.VaultBackend.VaultBackend']
+AUTHENTICATION_BACKENDS = ['pwmanager.Backends.VaultBackend']
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -89,6 +89,12 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        #'pwmanager.VaultBackend.VaultBackend'
+    )
 }
 
 

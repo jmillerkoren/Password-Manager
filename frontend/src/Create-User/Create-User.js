@@ -15,10 +15,9 @@ function CreateUser() {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         let hash = calculateHash();
-        const result = await axios.post('http://127.0.0.1:8000/api/v1/users/create_user/',
+        const result = await axios.post('http://127.0.0.1:8000/api/v1/register/create_user/',
             {
-                auth_key: hash,
-                password: hash
+                auth_key: hash
             });
         console.log(result);
     };
