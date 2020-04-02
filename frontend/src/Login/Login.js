@@ -15,9 +15,9 @@ function Login() {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         let encryptionKey = calculateHash();
-        const result = await axios.post('http://127.0.0.1:8000/api/v1/users/login/', {
+        const result = await axios.post('http://127.0.0.1:8000/api/v1/login/login_user/', {
             auth_key: encryptionKey
-        });
+        }, {withCredentials: true});
         console.log(encryptionKey);
         console.log(result)
     };
