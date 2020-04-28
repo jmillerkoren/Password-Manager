@@ -44,15 +44,17 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'corsheaders.middleware.CorsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware'
 ]
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'backend.urls'
 
@@ -75,11 +77,15 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+
+CORS_ORIGIN_WHITELIST = [
+    'http://pwmanager.com:5000',
+]
 
 AUTH_USER_MODEL = 'pwmanager.VaultUser'
 
-AUTHENTICATION_BACKENDS = ['pwmanager.Backends.VaultBackend']
+AUTHENTICATION_BACKENDS = ['pwmanager.backends.VaultBackend',]
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -92,9 +98,9 @@ DATABASES = {
 }
 
 REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        #'pwmanager.VaultBackend.VaultBackend'
-    )
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'pwmanager.backends.TokenBackend'
+    ]
 }
 
 

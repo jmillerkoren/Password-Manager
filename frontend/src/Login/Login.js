@@ -2,28 +2,25 @@ import React, {useState} from "react";
 
 import '../App.css'
 import './Login.css'
-import {Link} from "react-router-dom";
+import {Link, Redirect} from "react-router-dom";
 import axios from 'axios'
 import sha256 from "crypto-js/sha256";
 
-function Login() {
-    const [formData, changeData] = useState({
-        email: "",
-        password: ""
-    });
-
+function Login(props) {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         let encryptionKey = calculateHash();
-        const result = await axios.post('http://127.0.0.1:8000/api/v1/login/login_user/', {
+        const result = await axios.post('/api/v1/login/login_user/', {
             auth_key: encryptionKey
         }, {withCredentials: true});
-        console.log(encryptionKey);
-        console.log(result)
+        if (result.status === 200) {
+            localStorage.setItem("email", props.userData.email)
+            props.changeData({...props.userData, loggedIn: true})
+        }
     };
 
     const calculateHash = () => {
-        let hash = formData.email + formData.password;
+        let hash = props.userData.email + props.userData.password;
         for (let i = 0; i < 5000; ++i) {
             hash = sha256(hash).toString();
         }
@@ -32,11 +29,15 @@ function Login() {
 
     const handleChange = (evt) => {
         const value = evt.target.value;
-        changeData({
-            ...formData,
+        props.changeData({
+            ...props.userData,
             [evt.target.name]: value
         })
     };
+
+    if(props.userData.loggedIn) {
+        return <Redirect to={"/"}/>;
+    }
 
     return(
         <div className="container h-100">
@@ -48,11 +49,11 @@ function Login() {
                             <form className="form" onSubmit={handleSubmit}>
                                 <div className="form-group">
                                     <input type="text" className="form-control" id="email" name="email"
-                                           placeholder="Email" value={formData.email} onChange={handleChange}/>
+                                           placeholder="Email" value={props.userData.email} onChange={handleChange}/>
                                 </div>
                                 <div className="form-group">
                                     <input type="password" className="form-control" id="password" name="password"
-                                           placeholder="Password" value={formData.password} onChange={handleChange}/>
+                                           placeholder="Password" value={props.userData.password} onChange={handleChange}/>
                                 </div>
                                 <div className="btn-block">
                                     <button type="submit" className="btn btn-primary btn-lg btn-block">
