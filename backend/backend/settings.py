@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = [
-    'http://pwmanager.com:5000',
+    'http://localhost:3000',
 ]
 
 AUTH_USER_MODEL = 'pwmanager.VaultUser'

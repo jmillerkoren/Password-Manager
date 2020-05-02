@@ -35,7 +35,7 @@ class VaultUser(AbstractBaseUser):
         dt = datetime.now() + timedelta(days=60)
         token = jwt.encode({
             'id': str(self.pk),
-            'exp': (dt.strftime('%c'))
+            'exp': dt
         }, settings.SECRET_KEY, algorithm='HS256')
         return token.decode('utf-8')
 

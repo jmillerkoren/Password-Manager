@@ -38,7 +38,7 @@ class RegistrationViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         user = serializer.create(serializer.validated_data)
         response = HttpResponse()
-        response.set_cookie('access_token', user.token, httponly=False, expires= datetime.now() + timedelta(days=60))
+        response.set_cookie('access_token', user.token, httponly=False, expires=datetime.now() + timedelta(days=60), path='/')
         return response
 
 
@@ -52,7 +52,15 @@ class LoginViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         response = HttpResponse()
-        response.set_cookie('access_token', serializer.validated_data['token'], httponly=False, expires= datetime.now() + timedelta(days=60))
+        response.set_cookie('access_token', serializer.validated_data['token'], httponly=False, expires=datetime.now() + timedelta(days=60), path='/')
+        return response
+
+
+class LogoutViewSet(viewsets.ModelViewSet):
+    @action(methods=['post'], detail=False)
+    def logout_user(self, request):
+        response = HttpResponse()
+        response.delete_cookie('access_token')
         return response
 
 
@@ -67,6 +75,7 @@ class VaultViewSet(viewsets.ModelViewSet):
 
     @action(methods=['post'], detail=False)
     def add_vault(self, request):
+        request.data['vault_user'] = str(request.user.id)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()

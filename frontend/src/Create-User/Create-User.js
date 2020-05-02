@@ -9,12 +9,13 @@ function CreateUser(props) {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         let hash = calculateHash();
-        const result = await axios.post('http://127.0.0.1:8000/api/v1/register/create_user/',
+        const result = await axios.post('/api/v1/register/create_user/',
             {
                 auth_key: hash
             }, {withCredentials: true});
         if (result.status === 200) {
-            props.changeData({...props.userData, loggedIn: true})
+            console.log("request is 200");
+            props.changeData({...props.userData, loggedIn: true});
             localStorage.setItem("email", props.userData.email)
         }
     };

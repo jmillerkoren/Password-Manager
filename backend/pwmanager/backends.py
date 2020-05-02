@@ -36,7 +36,7 @@ class TokenBackend(BaseBackend):
 
     def _authenticate_credentials(self, request, token):
         try:
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms='HS-256')
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
         except:
             msg = 'Could not decode token.'
             raise exceptions.AuthenticationFailed(msg)

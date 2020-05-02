@@ -43,18 +43,18 @@ class LoginSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class VaultSerializer(serializers.HyperlinkedModelSerializer):
-    token = serializers.CharField(max_length=255, read_only=True)
+    vault_user = serializers.UUIDField(format='hex_verbose')
     username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=255)
     domain = serializers.CharField(max_length=255)
 
     class Meta:
         model = Vault
-        fields = ['token', 'username', 'password', 'domain']
+        fields = ['vault_user', 'username', 'password', 'domain']
 
     def validate(self, data):
-        token = data.get('access_token', None)
-        if token is None:
+        user_id = data.get('vault_user', None)
+        if user_id is None:
             raise serializers.ValidationError('Access token needed to access Vault')
 
         username = data.get('username', None)
@@ -70,10 +70,10 @@ class VaultSerializer(serializers.HyperlinkedModelSerializer):
             raise serializers.ValidationError('Domain must be provided')
 
         return {
-            token,
-            username,
-            password,
-            domain
+            'vault_user': user_id,
+            username: username,
+            password: password,
+            domain: domain
         }
 
 

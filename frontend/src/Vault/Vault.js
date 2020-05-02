@@ -24,7 +24,7 @@ const styles = makeStyles(theme => ({
 function Vault() {
     const classes = styles();
     const testSubmit = async (evt) => {
-        const result = axios.post('localhost:8000/api/v1/vault/add_vault', {
+        const result = axios.post('/api/v1/vault/add_vault/', {
             username: 'testusername',
             password: 'password',
             domain: 'test.ca'
