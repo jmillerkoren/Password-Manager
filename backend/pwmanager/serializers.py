@@ -1,3 +1,5 @@
+import uuid
+
 from .models import VaultUser, Vault
 from rest_framework import serializers
 from django.contrib.auth import authenticate
@@ -43,20 +45,15 @@ class LoginSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class VaultSerializer(serializers.HyperlinkedModelSerializer):
-    vault_user = serializers.UUIDField(format='hex_verbose')
     username = serializers.CharField(max_length=255)
     password = serializers.CharField(max_length=255)
     domain = serializers.CharField(max_length=255)
 
     class Meta:
         model = Vault
-        fields = ['vault_user', 'username', 'password', 'domain']
+        fields = ['username', 'password', 'domain']
 
     def validate(self, data):
-        user_id = data.get('vault_user', None)
-        if user_id is None:
-            raise serializers.ValidationError('Access token needed to access Vault')
-
         username = data.get('username', None)
         if username is None:
             raise serializers.ValidationError('Username must be provided')
@@ -70,11 +67,15 @@ class VaultSerializer(serializers.HyperlinkedModelSerializer):
             raise serializers.ValidationError('Domain must be provided')
 
         return {
-            'vault_user': user_id,
-            username: username,
-            password: password,
-            domain: domain
+            'username': username,
+            'password': password,
+            'domain': domain
         }
 
-
-
+    def create(self, validated_data):
+        user = VaultUser.objects.get(pk=self.context.get('user_id'))
+        if user is not None:
+            vault_item = Vault(id=uuid.uuid4(), domain=validated_data['domain'], username=validated_data['username'],
+                               password=validated_data['password'], vault_user=user)
+            vault_item.save()
+            return vault_item

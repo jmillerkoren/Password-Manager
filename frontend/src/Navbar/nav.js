@@ -216,7 +216,6 @@ function Nav(props) {
     }
 
     else{
-        console.log("redirecting to login")
         return <Redirect to={"/login"}/>;
     }
 }

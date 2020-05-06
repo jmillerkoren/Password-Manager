@@ -1,5 +1,5 @@
 from datetime import datetime, timedelta
-from .models import VaultUser
+from .models import VaultUser, Vault
 from rest_framework import viewsets
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -71,12 +71,14 @@ class VaultViewSet(viewsets.ModelViewSet):
     serializer_class = VaultSerializer
     @action(methods=['get'], detail=False)
     def retrieve_vault(self, request):
-        return None
+        vault_items = Vault.objects.filter(vault_user=request.user)
+        serializer = self.serializer_class(vault_items, many=True)
+        return Response(serializer.data)
 
     @action(methods=['post'], detail=False)
     def add_vault(self, request):
         request.data['vault_user'] = str(request.user.id)
-        serializer = self.serializer_class(data=request.data)
+        serializer = self.serializer_class(data=request.data, context={'user_id': request.user.id})
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        vault_item = serializer.save()
         return Response(serializer.validated_data)

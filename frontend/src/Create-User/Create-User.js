@@ -37,7 +37,6 @@ function CreateUser(props) {
     };
 
     if(props.userData.loggedIn) {
-        console.log("Hit logged in")
         return <Redirect to={"/"}/>;
     }
 

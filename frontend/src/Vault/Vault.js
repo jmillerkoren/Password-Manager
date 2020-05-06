@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Grid from "@material-ui/core/Grid";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
 import Button from "@material-ui/core/Button";
@@ -22,14 +22,52 @@ const styles = makeStyles(theme => ({
 }));
 
 function Vault() {
+    const [vaultState, setState] = useState([]);
+    useEffect(() => {
+        async function FetchVaultItems() {
+            const result = await axios.get('/api/v1/vault/retrieve_vault/');
+            setState(result.data)
+
+        }
+        FetchVaultItems();
+    }, []);
+
     const classes = styles();
     const testSubmit = async (evt) => {
-        const result = axios.post('/api/v1/vault/add_vault/', {
-            username: 'testusername',
+        const result = await axios.post('/api/v1/vault/add_vault/', {
+            username: 'changedusername',
             password: 'password',
             domain: 'test.ca'
         })
     };
+
+    const vault_items = vaultState.map((item) => {
+        return (
+            <GridListTile>
+                <Card className={classes.root} variant="outlined">
+                    <CardContent>
+                        <Typography className={classes.title} color="textSecondary" gutterBottom>
+                            Word of the Day
+                        </Typography>
+                        <Typography variant="h5" component="h2">
+                            benevolent
+                        </Typography>
+                        <Typography className={classes.pos} color="textSecondary">
+                            adjective
+                        </Typography>
+                        <Typography variant="body2" component="p">
+                            well meaning and kindly.
+                            <br />
+                            {'"a benevolent smile"'}
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
+                        <Button size="small" onClick={testSubmit}>Learn More</Button>
+                    </CardActions>
+                </Card>
+            </GridListTile>
+        )
+    });
 
     return (
         <div>
@@ -42,36 +80,14 @@ function Vault() {
                 </Grid>
                 <Grid item>
                     <DropdownButton id="dropdown-basic-button" title="Sort By:" variant="secondary" size="sm">
-                        <Dropdown.Item href="#/action-1">Action</Dropdown.Item>
+                        <Dropdown.Item>Action</Dropdown.Item>
                         <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
                         <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
                     </DropdownButton>
                 </Grid>
             </Grid>
             <GridList className={classes.gridPadding} cellHeight={250} cols={4}>
-                <GridListTile>
-                    <Card className={classes.root} variant="outlined">
-                        <CardContent>
-                            <Typography className={classes.title} color="textSecondary" gutterBottom>
-                                Word of the Day
-                            </Typography>
-                            <Typography variant="h5" component="h2">
-                                benevolent
-                            </Typography>
-                            <Typography className={classes.pos} color="textSecondary">
-                                adjective
-                            </Typography>
-                            <Typography variant="body2" component="p">
-                                well meaning and kindly.
-                                <br />
-                                {'"a benevolent smile"'}
-                            </Typography>
-                        </CardContent>
-                        <CardActions>
-                            <Button size="small" onClick={testSubmit}>Learn More</Button>
-                        </CardActions>
-                    </Card>
-                </GridListTile>
+                {vault_items}
             </GridList>
         </div>
     )
