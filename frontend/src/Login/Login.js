@@ -5,13 +5,17 @@ import './Login.css'
 import {Link, Redirect} from "react-router-dom";
 import axios from 'axios'
 import sha256 from "crypto-js/sha256";
+import db from "../VaultDb";
 
 function Login(props) {
     const handleSubmit = async (evt) => {
         evt.preventDefault();
-        let encryptionKey = calculateHash();
+        let vault_key = calculateHash(props.userData.email + props.userData.password);
+        let auth_key = calculateHash(props.userData.password + vault_key);
+        let id = await db.vault_key.put({username:props.userData.email ,key: vault_key});
         const result = await axios.post('/api/v1/login/login_user/', {
-            auth_key: encryptionKey
+            email: props.userData.email,
+            auth_key: auth_key
         }, {withCredentials: true});
         if (result.status === 200) {
             localStorage.setItem("email", props.userData.email)
@@ -19,12 +23,11 @@ function Login(props) {
         }
     };
 
-    const calculateHash = () => {
-        let hash = props.userData.email + props.userData.password;
+    const calculateHash = (message) => {
         for (let i = 0; i < 5000; ++i) {
-            hash = sha256(hash).toString();
+            message = sha256(message).toString();
         }
-        return hash;
+        return message;
     };
 
     const handleChange = (evt) => {

@@ -4,18 +4,19 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.db import models
 from django.contrib.auth.base_user import BaseUserManager
 import jwt
-
 from backend import settings
+from django.contrib.auth.hashers import make_password
 
 
 class VaultUserManager(BaseUserManager):
-    def create_user(self, auth_key):
+    def create_user(self, auth_key, email):
         """
         Creates and saves a Vault User with a given auth key.
         """
         if not auth_key:
             raise ValueError('Auth key must be set')
-        user = self.model(id=uuid.uuid4(), auth_key=auth_key)
+        user = self.model(id=uuid.uuid4(), auth_key=auth_key, email=email)
+        user.auth_key = make_password(user.auth_key)
         user.save(self.db)
         return user
 
@@ -23,9 +24,10 @@ class VaultUserManager(BaseUserManager):
 # Create your models here.
 class VaultUser(AbstractBaseUser):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4(), unique=True)
+    email = models.CharField(max_length=255, unique=True)
     auth_key = models.CharField(max_length=255)
     objects = VaultUserManager()
-    USERNAME_FIELD = 'auth_key'
+    USERNAME_FIELD = 'email'
 
     @property
     def token(self):

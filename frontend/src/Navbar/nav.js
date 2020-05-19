@@ -28,6 +28,7 @@ import Grid from "@material-ui/core/Grid";
 import Select from "@material-ui/core/Select";
 import {DropdownButton, Dropdown} from "react-bootstrap";
 import axios from 'axios'
+import db from "../VaultDb";
 
 
 const drawerWidth = 320;
@@ -111,8 +112,10 @@ function Nav(props) {
 
 
     const logOut = async () => {
-        const result = await axios.post('/api/v1/logout/logout_user/', {})
+        const result = await axios.post('/api/v1/logout/logout_user/', {});
+        let vault_key = await db.vault_key.where("username").equalsIgnoreCase(localStorage.getItem("email")).delete();
         localStorage.removeItem("email");
+
         props.changeData({
             ...props.userData,
             loggedIn: false,

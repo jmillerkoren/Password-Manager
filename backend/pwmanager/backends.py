@@ -3,15 +3,19 @@ from django.conf import settings
 from .models import VaultUser
 from rest_framework import exceptions, authentication
 import jwt
+from django.contrib.auth.hashers import check_password
 
 
 class VaultBackend(BaseBackend):
-    def authenticate(self, request, auth_key=None):
+    def authenticate(self, request, email=None, auth_key=None):
         try:
-            vault_user = VaultUser.objects.get(auth_key=auth_key)
+            vault_user = VaultUser.objects.get(email=email)
         except VaultUser.DoesNotExist:
             raise exceptions.AuthenticationFailed("No such user")
-        return vault_user
+        correct_credentials = check_password(auth_key, vault_user.auth_key)
+        if correct_credentials:
+            return vault_user
+        raise exceptions.AuthenticationFailed("Provided credentials are not correct")
 
     def get_user(self, vault_key):
         try:
@@ -27,10 +31,6 @@ class TokenBackend(BaseBackend):
 
         if not access_token:
             return None
-
-        # the auth header of the request is 'byte' type and the jwt library used cannot
-        # handle this so the content must be manually decoded to utf-8
-        #decoded_token = access_token.decode('utf-8')
 
         return self._authenticate_credentials(request, access_token)
 
