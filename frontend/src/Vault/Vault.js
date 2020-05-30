@@ -1,48 +1,50 @@
 import React, {useState, useEffect} from 'react';
 import Grid from "@material-ui/core/Grid";
-import ButtonGroup from "@material-ui/core/ButtonGroup";
-import Button from "@material-ui/core/Button";
 import GridList from "@material-ui/core/GridList";
 import makeStyles from "@material-ui/core/styles/makeStyles";
 import {DropdownButton, Dropdown} from "react-bootstrap";
-import GridListTile from "@material-ui/core/GridListTile";
-import Card from "@material-ui/core/Card";
-import Typography from "@material-ui/core/Typography";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add"
 import axios from "axios";
 import VaultModal from "../VaulModal/VaultModal";
 import db from "../VaultDb"
 import AES from "crypto-js/aes"
 import * as CryptoJS from 'crypto-js'
-import lock from "../icons8-lock.svg"
 import VaultItem from "../VaultItem/VaultItem";
+import clsx from "clsx";
+
+const drawerWidth = 0;
 
 const styles = makeStyles(theme => ({
     gridPadding: {
         paddingTop: '30px'
     },
     vaultGrid: {
-        display: 'flex'
-    },
-    itemLogo: {
         display: 'flex',
-        justifyContent: 'center',
-        backgroundColor: '#414E9F',
-        paddingTop: '50px',
-        paddingBottom: '50px'
-
-    }
+    },
+    content: {
+        flexGrow: 1,
+        padding: theme.spacing(3),
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+        }),
+    },
+    contentShift: {
+        transition: theme.transitions.create('margin', {
+            easing: theme.transitions.easing.easeOut,
+            duration: theme.transitions.duration.enteringScreen,
+        }),
+        marginLeft: 320,
+    },
 }));
 
 const decryptMessage = (message, secretKey) => {
+    console.log(message);
     const decryptedMessage = AES.decrypt(message, secretKey);
+    console.log(decryptedMessage);
     return decryptedMessage;
 };
 
-function Vault() {
+function Vault(props) {
     const [vaultData, setData] = useState([]);
     const [vaultState, setState] = useState({
         updated: false
@@ -73,14 +75,15 @@ function Vault() {
 
     const vault_items = vaultData.map((item) => {
         return (
-            <VaultItem domain={item.domain} username={item.username} key={item.id}/>
+            <VaultItem domain={item.domain} username={item.username} password={item.password} key={item.id} vaultState={vaultState} setState={setState} itemId={item.id}/>
         )
     });
 
     return (
-        <div>
+        <div className={clsx(classes.content, {
+            [classes.contentShift]: props.open,
+        })}>
             <div className={classes.vaultGrid}>
-                <VaultModal vaultState={vaultState} setState={setState}/>
                 <Grid container justify={'flex-end'} spacing={2} direction={'row'} item>
                     <Grid item>
                         <DropdownButton id="dropdown-basic-button" title="Sort By:" variant="secondary" size="sm">
@@ -91,9 +94,18 @@ function Vault() {
                     </Grid>
                 </Grid>
             </div>
-            <GridList className={classes.gridPadding} cellHeight={250} cols={4} spacing={15}>
-                {vault_items}
-            </GridList>
+            <div className={classes.gridPadding}>
+                <Grid container direction={"row"} spacing={0} alignItems={"flex-end"}>
+                    <Grid item style={{width: "90%"}}>
+                        <GridList cellHeight={250} cols={4} spacing={15}>
+                            {vault_items}
+                        </GridList>
+                    </Grid>
+                    <Grid item>
+                        <VaultModal vaultState={vaultState} setState={setState}/>
+                    </Grid>
+                </Grid>
+            </div>
         </div>
     )
 }

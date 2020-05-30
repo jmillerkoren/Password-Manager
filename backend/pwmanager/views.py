@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from .serializers import VaultUserSerializer, RegistrationSerializer, LoginSerializer, VaultSerializer
 from pwmanager.backends import VaultBackend
 from django.http import HttpResponse
+from rest_framework import status
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -82,3 +83,21 @@ class VaultViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         vault_item = serializer.save()
         return Response(serializer.validated_data)
+
+    @action(methods=['delete'], detail=False)
+    def delete_vault(self,  request):
+        item_id = request.query_params.get('id')
+        item = Vault.objects.get(id=item_id)
+        item.delete()
+        return Response(status=status.HTTP_200_OK)
+
+    @action(methods=['put'], detail=False)
+    def edit_vault(self, request):
+        item_id = request.query_params.get('id')
+        item = Vault.objects.get(id=item_id)
+        serializer = self.serializer_class(item, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.validated_data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+

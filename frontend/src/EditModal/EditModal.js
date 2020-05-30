@@ -1,15 +1,16 @@
-import React, {useState} from "react"
-import Grid from "@material-ui/core/Grid";
-import Fab from "@material-ui/core/Fab";
-import AddIcon from "@material-ui/icons/Add";
+import React, {useState} from "react";
+import makeStyles from "@material-ui/core/styles/makeStyles";
 import {Modal} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import TextField from "@material-ui/core/TextField/TextField";
 import Button from "@material-ui/core/Button";
-import axios from 'axios'
-import db from '../VaultDb'
-import AES from 'crypto-js/aes'
+import db from "../VaultDb";
+import axios from "axios";
+import AES from "crypto-js/aes";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import {Visibility, VisibilityOff} from "@material-ui/icons";
+import './EditModal.css'
 
 const useStyles = makeStyles(theme => ({
     modal: {
@@ -28,7 +29,7 @@ const useStyles = makeStyles(theme => ({
     },
     textField: {
         paddingTop: '25px',
-
+        width: '50%'
     },
     wrapper: {
         display: 'flex',
@@ -38,24 +39,23 @@ const useStyles = makeStyles(theme => ({
         position: 'fixed',
         right: '4%',
         bottom: '3%'
+    },
+    focus: {
+        outline: 'none'
     }
 }));
 
-function VaultModal(props) {
+function EditModal(props) {
     const classes = useStyles();
-    const [modalState, setModalState] = useState(false);
     const [modalData, setData] = useState({
-        domain: '',
-        username: '',
-        password: ''
+        domain: props.domain,
+        username: props.username,
+        password: props.password
     });
-
-    const handleOpen = () => {
-        setModalState(true)
-    };
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleClose = () => {
-        setModalState(false)
+        props.setModalState(false)
     };
 
     const handleChange = (evt) => {
@@ -64,6 +64,10 @@ function VaultModal(props) {
             ...modalData,
             [evt.target.name]: value
         })
+    };
+
+    const handleShowPassword = (evt) => {
+      setShowPassword(!showPassword)
     };
 
     const signMessage = (message, secretKey) => {
@@ -79,7 +83,7 @@ function VaultModal(props) {
             ...modalData,
             password: signedPassword
         };
-        const result = await axios.post('/api/v1/vault/add_vault/', apiData);
+        const result = await axios.put('/api/v1/vault/edit_vault/', apiData, {params: {id: props.itemId}});
         if (result.status === 200) {
             props.setState({
                 ...props.vaultState,
@@ -92,7 +96,7 @@ function VaultModal(props) {
     const modalBody = (
         <div className={classes.paper}>
             <Typography variant={'h5'} align={'center'}>
-                Enter Domain and Credentials
+                Edit Domain and Credentials
             </Typography>
             <div className={classes.wrapper}>
                 <TextField
@@ -116,7 +120,14 @@ function VaultModal(props) {
                     className={classes.textField}
                     placeholder={'Password'} name={'password'}
                     onChange={handleChange}
-                    value={modalData.password}>
+                    value={modalData.password}
+                    type={showPassword ? 'text' : 'password'}
+                    InputProps={{endAdornment:
+                            <InputAdornment position={'end'}>
+                                <IconButton onClick={handleShowPassword} classes={{focusVisible: classes.focus}} className={"removeFocus"}>
+                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                            </InputAdornment>}}>
                 </TextField>
             </div>
             <div className={`${classes.wrapper} ${classes.textField}`} onClick={handleSubmit}>
@@ -127,21 +138,13 @@ function VaultModal(props) {
         </div>
     );
 
-
     return (
-        <div >
-            <Grid container justify={'flex-start'} direction={'row'} item>
-                <Grid item>
-                    <Fab color={'primary'} aria-label="add" onClick={handleOpen} className={classes.button}>
-                        <AddIcon/>
-                    </Fab>
-                </Grid>
-            </Grid>
-            <Modal open={modalState} onClose={handleClose} className={classes.modal}>
+        <div>
+            <Modal open={props.modalState} onClose={handleClose} className={classes.modal}>
                 {modalBody}
             </Modal>
         </div>
     )
 }
 
-export default VaultModal;
+export default EditModal;

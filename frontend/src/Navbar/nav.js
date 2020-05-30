@@ -36,6 +36,7 @@ const drawerWidth = 320;
 const useStyles = makeStyles((theme) => ({
     root: {
         display: 'flex',
+        height: '64px'
     },
     appBar: {
         transition: theme.transitions.create(['margin', 'width'], {
@@ -100,14 +101,14 @@ const useStyles = makeStyles((theme) => ({
 function Nav(props) {
     const classes = useStyles();
     const theme = useTheme();
-    const [open, setOpen] = React.useState(false);
+
 
     const handleDrawerOpen = () => {
-        setOpen(true);
+        props.setOpen(true);
     };
 
     const handleDrawerClose = () => {
-        setOpen(false);
+        props.setOpen(false);
     };
 
 
@@ -127,11 +128,10 @@ function Nav(props) {
     if (Cookies.get('access_token')) {
         return (
             <div className={classes.root}>
-                <CssBaseline />
                 <AppBar
                     position="fixed"
                     className={clsx(classes.appBar, {
-                        [classes.appBarShift]: open,
+                        [classes.appBarShift]: props.open,
                     })}
                 >
                     <Toolbar>
@@ -142,7 +142,7 @@ function Nav(props) {
                                     aria-label="open drawer"
                                     onClick={handleDrawerOpen}
                                     edge="start"
-                                    className={clsx(classes.menuButton, open && classes.hide)}
+                                    className={clsx(classes.menuButton, props.open && classes.hide)}
                                 >
                                     <MenuIcon />
                                 </IconButton>
@@ -176,7 +176,7 @@ function Nav(props) {
                     className={classes.drawer}
                     variant="persistent"
                     anchor="left"
-                    open={open}
+                    open={props.open}
                     classes={{
                         paper: classes.drawerPaper,
                     }}
@@ -205,14 +205,6 @@ function Nav(props) {
                         ))}
                     </List>
                 </Drawer>
-                <main
-                    className={clsx(classes.content, {
-                        [classes.contentShift]: open,
-                    })}
-                >
-                    <div className={classes.drawerHeader} />
-                    <Vault/>
-                </main>
             </div>
 
         );

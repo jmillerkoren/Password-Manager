@@ -15,12 +15,12 @@
 
 .App-header {
   background-color: #282c34;
-  height: 100vh;
-  width: 100vw;
+  min-height:100vh;
   display: flex;
   flex-direction: column;
   font-size: calc(10px + 2vmin);
   color: white;
+  box-sizing: border-box;
 }
 
 .App-link {
