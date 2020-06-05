@@ -52,8 +52,17 @@ class LoginViewSet(viewsets.ModelViewSet):
     def login_user(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        response = HttpResponse()
-        response.set_cookie('access_token', serializer.validated_data['token'], httponly=False, expires=datetime.now() + timedelta(days=60), path='/')
+        response = Response()
+        response.set_cookie('access_token', serializer.validated_data['token'], httponly=False,
+                            expires=datetime.now() + timedelta(days=60), path='/')
+        return response
+
+    @action(methods=['post'], detail=False)
+    def login_user_extension(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        headers = {'Authorization': 'Bearer {}'.format(serializer.validated_data['token'])}
+        response = Response(headers=headers)
         return response
 
 

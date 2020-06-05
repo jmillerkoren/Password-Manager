@@ -81,6 +81,7 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
+    'chrome-extension://ndhmbjbnfecajjinfofmoddkenmnigkn'
 ]
 
 AUTH_USER_MODEL = 'pwmanager.VaultUser'
