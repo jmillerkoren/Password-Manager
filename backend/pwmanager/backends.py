@@ -49,6 +49,33 @@ class TokenBackend(BaseBackend):
 
         return user, token
 
+class TokenBackendExtension(BaseBackend):
+    def authenticate(self, request):
+        access_token = request.META.get('HTTP_AUTHORIZATION')
+
+        if not access_token:
+            return None
+
+        return self._authenticate_credentials(request, access_token)
+
+    def _authenticate_credentials(self, request, token):
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+        except:
+            msg = 'Could not decode token.'
+            raise exceptions.AuthenticationFailed(msg)
+
+        try:
+            user = VaultUser.objects.get(pk=payload['id'])
+        except VaultUser.DoesNotExist:
+            msg = 'No user matching this token was found'
+            raise exceptions.AuthenticationFailed(msg)
+
+        return user, token
+
+
+
+
 
 
 

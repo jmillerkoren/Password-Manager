@@ -5,8 +5,13 @@
   "manifest_version": 2,
   "permissions":[
     "cookies",
-    "*://*/*"
+    "storage",
+    "<all_urls>"
   ],
+  "background": {
+    "scripts": ["background.js"],
+    "persistent": false
+  },
   "content_scripts": [
     {
       "matches": [

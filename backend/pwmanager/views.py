@@ -7,6 +7,7 @@ from .serializers import VaultUserSerializer, RegistrationSerializer, LoginSeria
 from pwmanager.backends import VaultBackend
 from django.http import HttpResponse
 from rest_framework import status
+from urllib.parse import unquote_plus
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -61,7 +62,7 @@ class LoginViewSet(viewsets.ModelViewSet):
     def login_user_extension(self, request):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
-        headers = {'Authorization': 'Bearer {}'.format(serializer.validated_data['token'])}
+        headers = {'Authorization': serializer.validated_data['token']}
         response = Response(headers=headers)
         return response
 
@@ -84,6 +85,15 @@ class VaultViewSet(viewsets.ModelViewSet):
         vault_items = Vault.objects.filter(vault_user=request.user)
         serializer = self.serializer_class(vault_items, many=True)
         return Response(serializer.data)
+
+    @action(methods=['get'], detail=False)
+    def vault_item(self, request):
+        vault_items = Vault.objects.filter(vault_user=request.user)
+        for item in vault_items:
+            if item.domain in unquote_plus(request.query_params.get('url')):
+                serializer = self.serializer_class(item)
+                return Response(serializer.data)
+        return Response()
 
     @action(methods=['post'], detail=False)
     def add_vault(self, request):

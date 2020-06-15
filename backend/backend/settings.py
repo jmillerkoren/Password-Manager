@@ -86,7 +86,7 @@ CORS_ORIGIN_WHITELIST = [
 
 AUTH_USER_MODEL = 'pwmanager.VaultUser'
 
-AUTHENTICATION_BACKENDS = ['pwmanager.backends.VaultBackend',]
+AUTHENTICATION_BACKENDS = ['pwmanager.backends.VaultBackend', ]
 
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
@@ -100,7 +100,8 @@ DATABASES = {
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'pwmanager.backends.TokenBackend'
+        'pwmanager.backends.TokenBackend',
+        'pwmanager.backends.TokenBackendExtension'
     ]
 }
 
