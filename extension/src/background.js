@@ -12,9 +12,15 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             })
             .then(response => response.json())
             .then(data => {
-                data.password = decryptPassword(data.password, result['vault_key']).toString(Utf8);
-                sendResponse({data});
+                if (request.type === 'password') {
+                    data.password = decryptPassword(data.password, result['vault_key']).toString(Utf8);
+                    sendResponse({input: data.password});
+                }
+                else {
+                    sendResponse({input: data.username})
+                }
             })
+            .catch(error => console.log(error))
     });
     return true;
 });
