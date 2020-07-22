@@ -1244,15 +1244,13 @@ chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
             })
             .then(response => response.json())
             .then(data => {
-                if (request.type === 'password') {
-                    data.password = decryptPassword(data.password, result['vault_key']).toString(crypto_js_enc_utf8__WEBPACK_IMPORTED_MODULE_1___default.a);
-                    sendResponse({input: data.password});
-                }
-                else {
-                    sendResponse({input: data.username})
-                }
+                data.password = decryptPassword(data.password, result['vault_key']).toString(crypto_js_enc_utf8__WEBPACK_IMPORTED_MODULE_1___default.a);
+                sendResponse([data]);
             })
-            .catch(error => console.log(error))
+            .catch(error => {
+                console.log(error);
+                sendResponse(undefined);
+            })
     });
     return true;
 });

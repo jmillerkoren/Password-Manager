@@ -17,10 +17,13 @@
       "matches": [
         "<all_urls>"
       ],
-      "js": ["content.js"]
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "all_frames": true
     }
   ],
   "browser_action": {
     "default_popup": "popup.html"
-  }
+  },
+  "web_accessible_resources": ["lock.svg", "inputPopup.html"]
 }

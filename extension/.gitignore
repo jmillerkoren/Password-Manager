@@ -2,3 +2,7 @@
 
 #ide folder
 /.idea
+
+#files make when built
+dist/popup.js
+dist/background.js
