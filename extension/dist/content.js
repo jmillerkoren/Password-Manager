@@ -4,7 +4,8 @@ let passInput;
 
 window.addEventListener('message', function (evt) {
     if (evt.origin === 'chrome-extension://' + chrome.runtime.id) {
-        console.log(evt);
+        console.log(evt.data);
+        fillCredentials(evt.data.username, evt.data.id);
     }
 })
 
@@ -12,7 +13,7 @@ findForms()
 
 let observer = new MutationObserver(function () {
     if (document.getElementById('fppopupuser') || document.getElementById('fppopuppass')) {
-        return
+        returqsn
     }
     findForms()
 })
@@ -29,11 +30,12 @@ function getCredentials(url, id) {
         chrome.runtime.sendMessage({url: url}, function(response) {
             if (response == undefined) {
                 credentials = [];
-                createCredentialsList(popupiframe);
+                createCredentialsList(popupiframe, id);
+                togglePopup(id);
             }
             else {
                 credentials = response;
-                createCredentialsList(popupiframe);
+                createCredentialsList(popupiframe, id);
                 togglePopup(id)
             }
         })
@@ -163,8 +165,8 @@ function createPopup(input, inputType) {
     document.body.appendChild(iframe);
 }
 
-function createCredentialsList(popupDiv) {
-    console.log(credentials);
+function createCredentialsList(popupDiv, id) {
+    console.log(id);
     popupDiv.contentWindow.postMessage({credentials: credentials, id: id}, '*');
 }
 
@@ -181,5 +183,12 @@ function getType(input) {
 }
 
 function fillCredentials(username, inputType) {
-
+    credentials.forEach((credential) => {
+        if (credential.username === username) {
+            console.log(userInput);
+            userInput.value = credential.username;
+            passInput.value = credential.password;
+            togglePopup(inputType);
+        }
+    })
 }
