@@ -1,7 +1,8 @@
 let credentials = []
+let userInput;
+let passInput;
 
 window.addEventListener('message', function (evt) {
-    console.log(evt)
     if (evt.origin === 'chrome-extension://' + chrome.runtime.id) {
         console.log(evt);
     }
@@ -67,12 +68,13 @@ function findInputs(form) {
     }
 
     if (form.contains(document.querySelector('input[type=email]'))) {
+        userInput = document.querySelector('input[type=email]');
         addButton(document.querySelector('input[type=email]'))
     }
 
     if (form.contains(document.querySelector('input[type=password]'))) {
+        passInput = document.querySelector('input[type=password]');
         addButton(document.querySelector('input[type=password]'))
-
     }
 }
 
@@ -80,17 +82,20 @@ function findInputLax(form) {
     if (form.contains(document.querySelector('input[type=text]'))) {
         console.log('text found');
         let textInput = document.querySelector('input[type=text]')
+        userInput = document.querySelector('input[type=text]')
         //getCredentials(location.href, 'text', textInput);
         addButton(textInput)
     }
 
     if (form.contains(document.querySelector('input[type=email]'))) {
         //getCredentials(location.href, 'email', document.querySelector('input[type=email]'));
+        userInput = document.querySelector('input[type=email]');
         addButton(document.querySelector('input[type=email]'))
     }
 
     if (form.contains(document.querySelector('input[type=password]'))) {
         //getCredentials(location.href, 'password', document.querySelector('input[type=password]'));
+        passInput = document.querySelector('input[type=password]');
         addButton(document.querySelector('input[type=password]'))
     }
 }
@@ -143,12 +148,6 @@ function insideIcon(tleft, bright, pointer) {
 function createPopup(input, inputType) {
     let boundingRect = input.getBoundingClientRect();
     let iframe = document.createElement('iframe');
-    iframe.onload = function() {
-        //iframe.width = iframe.contentWindow.document.body.scrollWidth
-        //iframe.height = iframe.contentWindow.document.body.scrollHeight
-        iframe.width = '292px';
-        iframe.height = '150px';
-    };
     iframe.src = chrome.runtime.getURL('inputPopup.html');
     if(inputType === 'text'  || inputType === 'email') {
         iframe.id = 'fppopupuser';
@@ -166,7 +165,7 @@ function createPopup(input, inputType) {
 
 function createCredentialsList(popupDiv) {
     console.log(credentials);
-    popupDiv.contentWindow.postMessage(credentials, '*');
+    popupDiv.contentWindow.postMessage({credentials: credentials, id: id}, '*');
 }
 
 function togglePopup(inputType) {
@@ -181,4 +180,6 @@ function getType(input) {
     return 'fppopuppass';
 }
 
+function fillCredentials(username, inputType) {
 
+}
