@@ -2,7 +2,7 @@ let credentials = []
 
 window.addEventListener('message', function (evt) {
     console.log(evt)
-    if (evt.origin === 'chrome://' + chrome.runtime.id) {
+    if (evt.origin === 'chrome-extension://' + chrome.runtime.id) {
         console.log(evt);
     }
 })
@@ -45,7 +45,7 @@ function findForms() {
         forms.forEach(function(form) {
             if (typeof(form.action) === "string" && form.action != "") {
                 console.log(form.action)
-                if (form.action.includes("login") || form.action.includes("sign-in")) {
+                if (form.action.includes("login") || form.action.includes("sign-ine")) {
                     console.log('lax');
                     findInputLax(form);
                 }

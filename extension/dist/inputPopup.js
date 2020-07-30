@@ -1,10 +1,9 @@
 window.addEventListener('message', recieveMessage, false)
 window.addEventListener('DOMContentLoaded', function (evt) {
-    window.parent.postMessage({width: document.body.scrollWidth}, '*');
+    window.parent.postMessage({width: document.body.clientWidth}, '*');
 })
 
 function recieveMessage(evt) {
-    console.log(window)
     credentialsList(evt.data);
 }
 
