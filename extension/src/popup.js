@@ -67,19 +67,23 @@ function displayLoggedin() {
     let root = document.getElementById('extension');
     let loginForm = document.getElementById('login-form');
     let logoutButton = document.createElement("button");
+    let container = document.createElement("div");
+    container.classList.add('container2');
+    container.id = 'buttonContainer';
     logoutButton.id = 'logout';
     logoutButton.classList.add('button');
-    logoutButton.innerText = "Logged in";
+    logoutButton.innerText = "Log Out";
     logoutButton.addEventListener("click", function () {
         chrome.storage.local.remove("access_token");
         proxyState.loggedIn = false;
     });
-    root.replaceChild(logoutButton, loginForm);
+    container.appendChild(logoutButton)
+    root.replaceChild(container, loginForm);
 }
 
 function displayLoggedout() {
     let root = document.getElementById('extension');
-    let logoutButton = document.getElementById('logout');
+    let logoutButtonContainer = document.getElementById('buttonContainer');
     let form = document.createElement('form');
     form.classList.add('login-form');
     form.classList.add('container');
@@ -87,9 +91,11 @@ function displayLoggedout() {
     let inputUsername = document.createElement('input');
     inputUsername.text = 'text';
     inputUsername.id = 'email';
+    inputUsername.placeholder = 'email';
     let inputPassword = document.createElement('input');
     inputPassword.type = 'password';
     inputPassword.id = 'password';
+    inputPassword.placeholder = 'password';
     let submit = document.createElement('input');
     submit.addEventListener('click', async () => {
         await submitCredentials()
@@ -99,5 +105,5 @@ function displayLoggedout() {
     form.appendChild(inputUsername);
     form.appendChild(inputPassword);
     form.appendChild(submit);
-    root.replaceChild(form, logoutButton);
+    root.replaceChild(form, logoutButtonContainer);
 }
