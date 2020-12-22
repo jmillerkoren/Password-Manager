@@ -25,7 +25,7 @@ SECRET_KEY = '59ww@!#+g=5)if(+$*n4*4tb06psa^r01n+*ok3o#^lf5d)9b#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['192.168.4.22']
 
 
 # Application definition
@@ -81,7 +81,8 @@ CORS_ALLOW_CREDENTIALS = True
 
 CORS_ORIGIN_WHITELIST = [
     'http://localhost:3000',
-    'chrome-extension://ndhmbjbnfecajjinfofmoddkenmnigkn'
+    'chrome-extension://ndhmbjbnfecajjinfofmoddkenmnigkn',
+    'http://192.168.1.137'
 ]
 
 AUTH_USER_MODEL = 'pwmanager.VaultUser'
