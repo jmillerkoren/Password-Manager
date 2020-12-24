@@ -1,0 +1,33 @@
+version: "3.3"
+services: 
+  api:
+    build: ./backend/      
+    container_name: pwmanagerapi
+    volumes: 
+      - './backend:/app/'        
+    ports: 
+      - "8000:8000"
+    depends_on: 
+      - postgres
+    
+  frontend:
+    build: ./frontend
+    container_name: myreact
+    volumes:
+      - './frontend:/app'
+      - /src/app/node_modules
+    ports:
+      - "3000:80"
+  
+  postgres:
+    image: postgres:latest
+    container_name: mypostgres
+    volumes:
+      - './backend/data/'
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: jmillerkoren
+      POSTGRES_PASSSWORD: mydbpw
+      POSTGRES_DB: pwmanager
+  
