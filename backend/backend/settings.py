@@ -94,11 +94,11 @@ AUTHENTICATION_BACKENDS = ['pwmanager.backends.VaultBackend', ]
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': 'pwmanager',
         'USER': 'jmillerkoren',
         'PASSWORD': 'mydbpw',
-        'HOST': '192.196.4.22',
+        'HOST': '192.168.4.22',
         'PORT': '5432'
     }
 }

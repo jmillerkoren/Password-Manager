@@ -14,8 +14,7 @@ services:
     build: ./frontend
     container_name: myreact
     volumes:
-      - './frontend:/app'
-      - /src/app/node_modules
+      - './frontend/build:/usr/share/nginx/html'      
     ports:
       - "3000:80"
   
@@ -23,11 +22,17 @@ services:
     image: postgres:latest
     container_name: mypostgres
     volumes:
-      - './backend/data/'
+      - './backend/data/:/var/lib/postgresql/data'
     ports:
       - "5432:5432"
     environment:
       POSTGRES_USER: jmillerkoren
-      POSTGRES_PASSSWORD: mydbpw
+      POSTGRES_PASSWORD: mydbpw
       POSTGRES_DB: pwmanager
+
+  nginx:
+    build: .
+    container_name: mynginx
+    ports:
+      - "80:80"
   
