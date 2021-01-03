@@ -14,39 +14,41 @@ import Vault from "./Vault/Vault";
 import Grid from "@material-ui/core/Grid";
 
 function App() {
-const [userData, changeData] = useState({
-    email: (localStorage.getItem("email") != null && Cookies.get('access_token')) ? localStorage.getItem("email") : "",
-    password: "",
-    confirmedPass: "",
-    loggedIn: false
-});
-const [open, setOpen] = React.useState(false);
+    const [userData, changeData] = useState({
+        email: (localStorage.getItem("email") != null && Cookies.get('access_token')) ? localStorage.getItem("email") : "",
+        password: "",
+        confirmedPass: "",
+        loggedIn: false
+    });
+    const [open, setOpen] = useState(false);
 
-  return (
-      <Router>
-          <div className="App-header">
-              <Switch>
-                  <Route exact path={"/"}>
-                      {Cookies.get('access_token')} ? <Redirect to={"/vault"}/> : <Redirect to={"/login"}/>
-                  </Route>
-                  <Route exact path="/vault" render={(props) => {
-                      return (
-                          <Grid container direction={'column'}>
-                              <Grid item>
-                                  <Nav changeData={changeData} userData={userData} open={open} setOpen={setOpen}/>
-                              </Grid>
-                              <Grid item>
-                                  <Vault open={open} setOpen={setOpen}/>
-                              </Grid>
-                          </Grid>
-                      )
-                  }}/>
-                  <Route exact path="/login" render={(props) => <Login changeData={changeData} userData={userData}/>}/>
-                  <Route exact path="/sign-up" render={(props) => <CreateUser changeData={changeData} userData={userData}/>}/>
-              </Switch>
-          </div>
-      </Router>
-  );
+    const [filter, setFilter] = useState("");
+
+    return (
+        <Router>
+            <div className="App-header">
+                <Switch>
+                    <Route exact path={"/"}>
+                        {Cookies.get('access_token')} ? <Redirect to={"/vault"}/> : <Redirect to={"/login"}/>
+                    </Route>
+                    <Route exact path="/vault" render={(props) => {
+                        return (
+                            <Grid container direction={'column'}>
+                                <Grid item>
+                                    <Nav changeData={changeData} userData={userData} open={open} setOpen={setOpen} setFilter={setFilter}/>
+                                </Grid>
+                                <Grid item>
+                                    <Vault open={open} setOpen={setOpen} filter={filter}/>
+                                </Grid>
+                            </Grid>
+                        )
+                    }}/>
+                    <Route exact path="/login" render={(props) => <Login changeData={changeData} userData={userData}/>}/>
+                    <Route exact path="/sign-up" render={(props) => <CreateUser changeData={changeData} userData={userData}/>}/>
+                </Switch>
+            </div>
+        </Router>
+    );
 }
 
 export default App;

@@ -1,3 +1,6 @@
-#login-column {
-
+.invalid-feedback {
+    font-size: 50%;
+}
+#errorAlert {
+    font-size: 50%;
 }

@@ -1,11 +1,10 @@
 import React from "react";
 import './nav.css';
-import {Redirect} from "react-router-dom";
+import {Redirect, useHistory} from "react-router-dom";
 import Cookies from 'js-cookie'
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
-import CssBaseline from '@material-ui/core/CssBaseline';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import List from '@material-ui/core/List';
@@ -19,13 +18,8 @@ import ListItem from '@material-ui/core/ListItem';
 import {TextField} from "@material-ui/core";
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
-import SearchIcon from '@material-ui/icons/Search';
-import Vault from "../Vault/Vault";
-import InputAdornment from "@material-ui/core/InputAdornment";
+import HomeIcon from '@material-ui/icons/Home';
 import Grid from "@material-ui/core/Grid";
-import Select from "@material-ui/core/Select";
 import {DropdownButton, Dropdown} from "react-bootstrap";
 import axios from 'axios'
 import db from "../VaultDb";
@@ -99,6 +93,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function Nav(props) {
+    let history = useHistory();
     const classes = useStyles();
     const theme = useTheme();
 
@@ -109,6 +104,10 @@ function Nav(props) {
 
     const handleDrawerClose = () => {
         props.setOpen(false);
+    };
+
+    const test = (evt) => {
+        history.push('/vault')
     };
 
 
@@ -123,6 +122,10 @@ function Nav(props) {
             email: "",
             password:""
         });
+    };
+
+    const filterVault = (evt) => {
+        props.setFilter(evt.target.value);
     };
 
     if (Cookies.get('access_token')) {
@@ -158,15 +161,14 @@ function Nav(props) {
                                     id="input-with-icon-adornment"
                                     label="Search Vault"
                                     variant="outlined"
+                                    onChange={filterVault}
                                 />
                             </Grid>
                         </Grid>
                         <Grid container  direction={"row"} alignItems={"center"} spacing={1} justify={"flex-end"}>
                             <Grid item>
                                 <DropdownButton id="dropdown-basic-button" title={props.userData.email}>
-                                    <Dropdown.Item onClick={logOut}>Logout</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                                    <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
+                                    <Dropdown.Item onClick={logOut}>Logout</Dropdown.Item>                                    
                                 </DropdownButton>
                             </Grid>
                         </Grid>
@@ -188,22 +190,11 @@ function Nav(props) {
                     </div>
                     <Divider/>
                     <List>
-                        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-                            <ListItem button key={text}>
-                                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ))}
-                    </List>
-                    <Divider />
-                    <List>
-                        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-                            <ListItem button key={text}>
-                                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                                <ListItemText primary={text} />
-                            </ListItem>
-                        ))}
-                    </List>
+                        <ListItem button onClick={test}>
+                            <ListItemIcon>{<HomeIcon/>}</ListItemIcon>
+                            <ListItemText primary={"Home"}/>
+                        </ListItem>                        
+                    </List>                                        
                 </Drawer>
             </div>
 

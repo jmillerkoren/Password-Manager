@@ -6,6 +6,9 @@ import {Modal} from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import IconButton from "@material-ui/core/IconButton";
+import {Visibility, VisibilityOff} from "@material-ui/icons";
 import Button from "@material-ui/core/Button";
 import axios from 'axios'
 import db from '../VaultDb'
@@ -28,6 +31,7 @@ const useStyles = makeStyles(theme => ({
     },
     textField: {
         paddingTop: '25px',
+        width: '50%'
 
     },
     wrapper: {
@@ -49,6 +53,7 @@ function VaultModal(props) {
         username: '',
         password: ''
     });
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleOpen = () => {
         setModalState(true)
@@ -71,6 +76,10 @@ function VaultModal(props) {
         return signedPassword;
     };
 
+    const handleShowPassword = (evt) => {
+        setShowPassword(!showPassword)
+      };  
+
     const handleSubmit = async (evt) => {
         evt.preventDefault();
         let vault_key = await db.vault_key.where("username").equalsIgnoreCase(localStorage.getItem("email")).first();
@@ -85,6 +94,7 @@ function VaultModal(props) {
                 ...props.vaultState,
                 updated: true
             });
+            setData({domain: "", username: "", password: ""})
             handleClose();
         }
     };
@@ -116,10 +126,17 @@ function VaultModal(props) {
                     className={classes.textField}
                     placeholder={'Password'} name={'password'}
                     onChange={handleChange}
-                    value={modalData.password}>
+                    value={modalData.password}
+                    type={showPassword ? 'text' : 'password'}
+                    InputProps={{endAdornment:
+                        <InputAdornment position={'end'}>
+                            <IconButton onClick={handleShowPassword} classes={{focusVisible: classes.focus}} className={"removeFocus"}>
+                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                            </IconButton>
+                        </InputAdornment>}}>
                 </TextField>
             </div>
-            <div className={`${classes.wrapper} ${classes.textField}`} onClick={handleSubmit}>
+            <div className={`${classes.wrapper}`} style={{paddingTop: '25px'}} onClick={handleSubmit}>
                 <Button variant={'contained'} color={'primary'}>
                     Save
                 </Button>

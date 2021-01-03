@@ -2,7 +2,9 @@ import React, {useState, useEffect} from 'react';
 import Grid from "@material-ui/core/Grid";
 import GridList from "@material-ui/core/GridList";
 import makeStyles from "@material-ui/core/styles/makeStyles";
-import {DropdownButton, Dropdown} from "react-bootstrap";
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
 import axios from "axios";
 import VaultModal from "../VaulModal/VaultModal";
 import db from "../VaultDb"
@@ -37,10 +39,8 @@ const styles = makeStyles(theme => ({
     },
 }));
 
-const decryptMessage = (message, secretKey) => {
-    console.log(message);
-    const decryptedMessage = AES.decrypt(message, secretKey);
-    console.log(decryptedMessage);
+const decryptMessage = (message, secretKey) => {    
+    const decryptedMessage = AES.decrypt(message, secretKey);    
     return decryptedMessage;
 };
 
@@ -49,6 +49,7 @@ function Vault(props) {
     const [vaultState, setState] = useState({
         updated: false
     });
+    
     useEffect(() => {
         async function FetchVaultItems() {
             let unencryptedData = [];
@@ -74,9 +75,11 @@ function Vault(props) {
     const classes = styles();
 
     const vault_items = vaultData.map((item) => {
-        return (
-            <VaultItem domain={item.domain} username={item.username} password={item.password} key={item.id} vaultState={vaultState} setState={setState} itemId={item.id}/>
-        )
+        if (item.domain.includes(props.filter)) {
+            return (
+                <VaultItem domain={item.domain} username={item.username} password={item.password} key={item.id} vaultState={vaultState} setState={setState} itemId={item.id}/>
+            )
+        }
     });
 
     return (
@@ -84,14 +87,7 @@ function Vault(props) {
             [classes.contentShift]: props.open,
         })}>
             <div className={classes.vaultGrid}>
-                <Grid container justify={'flex-end'} spacing={2} direction={'row'} item>
-                    <Grid item>
-                        <DropdownButton id="dropdown-basic-button" title="Sort By:" variant="secondary" size="sm">
-                            <Dropdown.Item>Action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-2">Another action</Dropdown.Item>
-                            <Dropdown.Item href="#/action-3">Something else</Dropdown.Item>
-                        </DropdownButton>
-                    </Grid>
+                <Grid container justify={'flex-end'} spacing={2} direction={'row'} item>                    
                 </Grid>
             </div>
             <div className={classes.gridPadding}>

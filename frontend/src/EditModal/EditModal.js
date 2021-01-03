@@ -28,8 +28,8 @@ const useStyles = makeStyles(theme => ({
         padding: theme.spacing(2, 4, 3),
     },
     textField: {
-        paddingTop: '25px',
-        width: '50%'
+        width: '50%',
+        paddingTop: '25px',        
     },
     wrapper: {
         display: 'flex',
@@ -130,7 +130,7 @@ function EditModal(props) {
                             </InputAdornment>}}>
                 </TextField>
             </div>
-            <div className={`${classes.wrapper} ${classes.textField}`} onClick={handleSubmit}>
+            <div className={`${classes.wrapper}`} style={{paddingTop: '25px'}} onClick={handleSubmit}>
                 <Button variant={'contained'} color={'primary'}>
                     Save
                 </Button>
